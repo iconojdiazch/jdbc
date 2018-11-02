@@ -1,0 +1,127 @@
+<?xml version="1.0"?>
+<webRowSet xmlns="http://java.sun.com/xml/ns/jdbc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://java.sun.com/xml/ns/jdbc http://java.sun.com/xml/ns/jdbc/webrowset.xsd">
+  <properties>
+    <command>select customer_id, name from customer order by name</command>
+    <concurrency>1008</concurrency>
+    <datasource><null/></datasource>
+    <escape-processing>true</escape-processing>
+    <fetch-direction>1000</fetch-direction>
+    <fetch-size>0</fetch-size>
+    <isolation-level>2</isolation-level>
+    <key-columns>
+    </key-columns>
+    <map>
+    </map>
+    <max-field-size>0</max-field-size>
+    <max-rows>0</max-rows>
+    <query-timeout>0</query-timeout>
+    <read-only>true</read-only>
+    <rowset-type>ResultSet.TYPE_SCROLL_INSENSITIVE</rowset-type>
+    <show-deleted>false</show-deleted>
+    <table-name>customer order by name</table-name>
+    <url><null/></url>
+    <sync-provider>
+      <sync-provider-name>com.sun.rowset.providers.RIOptimisticProvider</sync-provider-name>
+      <sync-provider-vendor>Oracle Corporation</sync-provider-vendor>
+      <sync-provider-version>1.0</sync-provider-version>
+      <sync-provider-grade>2</sync-provider-grade>
+      <data-source-lock>1</data-source-lock>
+    </sync-provider>
+  </properties>
+  <metadata>
+    <column-count>2</column-count>
+    <column-definition>
+      <column-index>1</column-index>
+      <auto-increment>false</auto-increment>
+      <case-sensitive>false</case-sensitive>
+      <currency>false</currency>
+      <nullable>0</nullable>
+      <signed>true</signed>
+      <searchable>true</searchable>
+      <column-display-size>11</column-display-size>
+      <column-label>CUSTOMER_ID</column-label>
+      <column-name>CUSTOMER_ID</column-name>
+      <schema-name>APP</schema-name>
+      <column-precision>10</column-precision>
+      <column-scale>0</column-scale>
+      <table-name>CUSTOMER</table-name>
+      <catalog-name></catalog-name>
+      <column-type>4</column-type>
+      <column-type-name>INTEGER</column-type-name>
+    </column-definition>
+    <column-definition>
+      <column-index>2</column-index>
+      <auto-increment>false</auto-increment>
+      <case-sensitive>true</case-sensitive>
+      <currency>false</currency>
+      <nullable>1</nullable>
+      <signed>false</signed>
+      <searchable>true</searchable>
+      <column-display-size>30</column-display-size>
+      <column-label>NAME</column-label>
+      <column-name>NAME</column-name>
+      <schema-name>APP</schema-name>
+      <column-precision>30</column-precision>
+      <column-scale>0</column-scale>
+      <table-name>CUSTOMER</table-name>
+      <catalog-name></catalog-name>
+      <column-type>12</column-type>
+      <column-type-name>VARCHAR</column-type-name>
+    </column-definition>
+  </metadata>
+  <data>
+    <currentRow>
+      <columnValue>722</columnValue>
+      <columnValue>Big Car Parts</columnValue>
+    </currentRow>
+    <currentRow>
+      <columnValue>863</columnValue>
+      <columnValue>Big Network Systems</columnValue>
+    </currentRow>
+    <currentRow>
+      <columnValue>36</columnValue>
+      <columnValue>Bob Hosting Corp.</columnValue>
+    </currentRow>
+    <currentRow>
+      <columnValue>106</columnValue>
+      <columnValue>Early CentralComp</columnValue>
+    </currentRow>
+    <currentRow>
+      <columnValue>149</columnValue>
+      <columnValue>John Valley Computers</columnValue>
+    </currentRow>
+    <currentRow>
+      <columnValue>1</columnValue>
+      <columnValue>Jumbo Eagle Corp</columnValue>
+    </currentRow>
+    <currentRow>
+      <columnValue>2</columnValue>
+      <columnValue>New Enterprises</columnValue>
+    </currentRow>
+    <currentRow>
+      <columnValue>409</columnValue>
+      <columnValue>Old Media Productions</columnValue>
+    </currentRow>
+    <currentRow>
+      <columnValue>3</columnValue>
+      <columnValue>Small Bill Company</columnValue>
+    </currentRow>
+    <currentRow>
+      <columnValue>777</columnValue>
+      <columnValue>West Valley Inc.</columnValue>
+    </currentRow>
+    <currentRow>
+      <columnValue>25</columnValue>
+      <columnValue>Wren Computers</columnValue>
+    </currentRow>
+    <currentRow>
+      <columnValue>410</columnValue>
+      <columnValue>Yankee Computer Repair Ltd</columnValue>
+    </currentRow>
+    <currentRow>
+      <columnValue>753</columnValue>
+      <columnValue>Zed Motor Co</columnValue>
+    </currentRow>
+  </data>
+</webRowSet>
