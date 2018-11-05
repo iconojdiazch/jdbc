@@ -18,6 +18,12 @@
             <version>5.1.17</version>
         </dependency>
         <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>1.4.197</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
             <groupId>com.github.davidmoten</groupId>
             <artifactId>rxjava-jdbc</artifactId>
             <version>0.7.11</version>

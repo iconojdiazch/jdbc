@@ -17,6 +17,12 @@
             <artifactId>mysql-connector-java</artifactId>
             <version>5.1.17</version>
         </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>1.4.197</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
     <name>aproximacionFuncional</name>
 </project>

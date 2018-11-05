@@ -17,6 +17,6 @@ CREATE TABLE `telefonos` (
 ALTER TABLE `telefonos` ADD CONSTRAINT `telefonos_fk0` FOREIGN KEY (`persona_id`) REFERENCES `personas`(`id`);
 
 INSERT INTO `personas` (id,nombre) values(1000,'primera');
-INSERT INTO `telefonos` (id,numero,persona_id) values(2000,'primer teléfono',1000);
-INSERT INTO `telefonos` (id,numero,persona_id) values(2010,'segundo teléfono',1000);
+INSERT INTO `telefonos` (id,numero,persona_id) values(2000,'123456',1000);
+INSERT INTO `telefonos` (id,numero,persona_id) values(2010,'654321',1000);
 

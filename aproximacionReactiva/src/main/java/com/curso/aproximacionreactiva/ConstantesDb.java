@@ -15,4 +15,8 @@ public interface ConstantesDb {
     String DRIVER = "com.mysql.jdbc.Driver";
     String USUARIO = "root";
     String CLAVE = "";
+    String H2PASSWORD = "";
+    String H2USER = "sa";
+    String JDBCH2MEMTEST = "jdbc:h2:mem:test";
+    String ORGH2_DRIVER = "org.h2.Driver";
 }
