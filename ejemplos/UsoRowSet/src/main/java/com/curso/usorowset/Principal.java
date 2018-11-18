@@ -18,15 +18,17 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import static java.lang.Class.forName;
+import static java.lang.System.out;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
-import java.sql.DriverManager;
+import static java.sql.DriverManager.getConnection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import static java.sql.ResultSet.CLOSE_CURSORS_AT_COMMIT;
+import static java.sql.ResultSet.HOLD_CURSORS_OVER_COMMIT;
 import java.sql.SQLException;
 import java.sql.Savepoint;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.sql.RowSetEvent;
 import javax.sql.RowSetListener;
 import javax.sql.rowset.CachedRowSet;
@@ -46,69 +48,62 @@ public class Principal {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
-        try {
-            Principal p = new Principal();
-            p.cargarDriver();
-            if (args == null) {
-                p.usarConexion();
-            } else if (args[0].equals("datasource")) {
-                p.usarDataSource();
-            } else {
-                p.usarConexion();
-            }
-            p.usoRowSet();
-            p.usoRowSetListener();
-            p.usoCachedRowset();
-            p.serializarCachedRowSet();
-            p.usoWebRowSet();
-            p.usoClavesGeneradas();
-            p.usoSavePoint("abc", 1);
-            p.cerrarConexion();
-        } catch (IOException | SQLException | ClassNotFoundException ex) {
-            Logger.getLogger("global").log(Level.SEVERE, null, ex);
-        }
+    public static void main(String[] args) throws ClassNotFoundException, SQLException, IOException {
+        Principal p = new Principal();
+        p.usoRowSet();
+        p.usoRowSetListener();
+        p.usoCachedRowset();
+        p.serializarCachedRowSet();
+        p.usoWebRowSet();
+        p.usoClavesGeneradas();
+        p.usoSavePoint("abc", 1);
+        p.cerrarConexion();
+
     }
 
     private void usarConexion() throws SQLException {
-        con = DriverManager.getConnection("jdbc:derby://localhost:1527/sample", "app", "app");
-        System.out.println("Conectado a la base de datos usando el DriverManager");
+        con = getConnection("jdbc:derby://localhost:1527/sample", "app", "app");
+        out.println("Conectado a la base de datos usando el DriverManager");
     }
 
     private void cargarDriver() throws ClassNotFoundException {
-        Class.forName("org.apache.derby.jdbc.ClientDriver");
+        System.out.println("................EN cargarDriver");
+        forName("org.apache.derby.jdbc.ClientDriver");
     }
 
     private void cerrarConexion() throws SQLException {
         if (con != null) {
             con.close();
-            System.out.println("Desconectado de la base de datos");
+            out.println("Desconectado de la base de datos");
         }
     }
 
     private void serializarCachedRowSet() throws SQLException, IOException, ClassNotFoundException {
+        System.out.println("................EN serializarCachedRowSet");
+        usarConexion();
         try (CachedRowSet rowSet = new CachedRowSetImpl()) {
             rowSet.setCommand("select customer_id, name from customer order by name");
             rowSet.execute(con);
-            System.out.println("Serializando el RowSet...");
+            out.println("Serializando el RowSet...");
             try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("rowset.ser"))) {
                 oos.writeObject(rowSet);
             }
-            System.out.println("Serialización completa");
-            System.out.println("Resuperando el rowset del disco...");
+            out.println("Serialización completa");
+            out.println("Resuperando el rowset del disco...");
             CachedRowSet nuevo;
             try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("rowset.ser"))) {
                 nuevo = (CachedRowSet) ois.readObject();
             }
-            System.out.println("Recuperación completa");
-            System.out.println("Mostrando los datos...");
+            out.println("Recuperación completa");
+            out.println("Mostrando los datos...");
             while (nuevo.next()) {
-                System.out.format("Id = %d. Nombre = %s%n", nuevo.getInt("customer_id"), nuevo.getString("name"));
+                out.format("Id = %d. Nombre = %s%n", nuevo.getInt("customer_id"), nuevo.getString("name"));
             }
         }
     }
 
     private void usarDataSource() throws SQLException {
+        System.out.println("................EN usarDataSource");
         ds = new ClientConnectionPoolDataSource();
         ds.setUser("app");
         ds.setPassword("app");
@@ -117,24 +112,27 @@ public class Principal {
         con = ds.getConnection();
         Integer hold = con.getHoldability();
         switch (hold) {
-            case ResultSet.HOLD_CURSORS_OVER_COMMIT:
-                System.out.println("Tipo de \"Holding\": HOLD_CURSORS_OVER_COMMIT");
+            case HOLD_CURSORS_OVER_COMMIT:
+                out.println("Tipo de \"Holding\": HOLD_CURSORS_OVER_COMMIT");
                 break;
-            case ResultSet.CLOSE_CURSORS_AT_COMMIT:
-                System.out.println("Tipo de \"Holding\": CLOSE_CURSORS_AT_COMMIT");
+            case CLOSE_CURSORS_AT_COMMIT:
+                out.println("Tipo de \"Holding\": CLOSE_CURSORS_AT_COMMIT");
                 break;
             default:
-                System.out.println("Tipo de holding inesperado");
+                out.println("Tipo de holding inesperado");
                 break;
         }
 
-        System.out.println("Conectado a la base de datos usando una datasource");
+        out.println("Conectado a la base de datos usando una datasource");
     }
 
     private void usoSavePoint(String nombre, Integer veces) throws SQLException {
+        System.out.println("................EN usoSavePoint");
+
+        usarConexion();
         DatabaseMetaData dbmd = con.getMetaData();
         Boolean b = dbmd.supportsSavepoints();
-        System.out.println(b ? "Savepoints soportados" : "Savepoints no soportados");
+        out.println(b ? "Savepoints soportados" : "Savepoints no soportados");
         if (b) {
             Savepoint sv;
             try {
@@ -150,12 +148,12 @@ public class Principal {
                 if ((veces & 1) == 1) {
                     //Una manera rápida de comprobar si un número es impar
                     con.rollback(sv);
-                    System.out.println("Rollback sobre el savepoint");
+                    out.println("Rollback sobre el savepoint");
                 }
                 con.commit();
             } catch (SQLException e) {
                 while (e != null) {
-                    System.out.println(e);
+                    out.println(e);
                     e = e.getNextException();
                 }
                 con.rollback();
@@ -166,40 +164,45 @@ public class Principal {
     }
 
     private void usoCachedRowset() throws SQLException {
+        System.out.println("................EN usoCachedRowset");
+
+        usarConexion();
         try (CachedRowSet rowSet = new CachedRowSetImpl()) {
             rowSet.addRowSetListener(new RowSetListener() {
-                
+
                 @Override
                 public void rowSetChanged(RowSetEvent event) {
-                    System.out.println("El rowset ha cambiado");
-                    System.out.println(event.toString());
-                    System.out.println(event.getSource().toString());
+                    out.println("El rowset ha cambiado");
+                    out.println(event.toString());
+                    out.println(event.getSource().toString());
                 }
-                
+
                 @Override
                 public void rowChanged(RowSetEvent event) {
-                    System.out.println("Una fila del rowset ha cambiado");
-                    System.out.println(event.toString());
+                    out.println("Una fila del rowset ha cambiado");
+                    out.println(event.toString());
                 }
-                
+
                 @Override
                 public void cursorMoved(RowSetEvent event) {
-                    System.out.println("Nos hemos desplazado por el RowSet");
-                    System.out.println(event.toString());
+                    out.println("Nos hemos desplazado por el RowSet");
+                    out.println(event.toString());
                 }
             });
             rowSet.setCommand("select customer_id, name from customer order by name");
             rowSet.execute(con);
             while (rowSet.next()) {
-                System.out.format("Id = %d. Nombre = %s%n", rowSet.getInt("customer_id"), rowSet.getString("name"));
+                out.format("Id = %d. Nombre = %s%n", rowSet.getInt("customer_id"), rowSet.getString("name"));
             }
         }
     }
 
     private void usoClavesGeneradas() throws SQLException {
+        System.out.println("................EN usoClavesGeneradas");
+        usarConexion();
         DatabaseMetaData dbmd = con.getMetaData();
         Boolean b = dbmd.supportsGetGeneratedKeys();
-        System.out.println(b ? "Hay soporte para obtener claves generadas" : "No hay soporte para obtener claves generadas");
+        out.println(b ? "Hay soporte para obtener claves generadas" : "No hay soporte para obtener claves generadas");
         if (b) {
             String[] cols = {"CUSTOMER_ID"};
             PreparedStatement ps = con.prepareStatement("INSERT INTO CUSTOMER (NAME) VALUES (?)", cols);
@@ -207,71 +210,77 @@ public class Principal {
             ps.executeUpdate();
             ResultSet rs = ps.getGeneratedKeys();
             while (rs.next()) {
-                System.out.println("Clave: " + rs.getString(1));
+                out.println("Clave: " + rs.getString(1));
             }
         }
     }
 
     private void usoRowSet() throws SQLException {
+        System.out.println("................EN usoRowSet");
+        usarConexion();
         try (JdbcRowSet rowSet = new JdbcRowSetImpl(con)) {
             rowSet.setCommand("select customer_id, name from customer order by name");
             rowSet.execute();
             while (rowSet.next()) {
-                System.out.format("Id = %d. Nombre = %s%n", rowSet.getInt("customer_id"), rowSet.getString("name"));
+                out.format("Id = %d. Nombre = %s%n", rowSet.getInt("customer_id"), rowSet.getString("name"));
             }
         }
     }
 
     private void usoRowSetListener() throws SQLException {
+        System.out.println("................EN usoRowSetListener");
+        usarConexion();
         try (JdbcRowSet rowSet = new com.sun.rowset.JdbcRowSetImpl(con)) {
             rowSet.addRowSetListener(new RowSetListener() {
-                
+
                 @Override
                 public void rowSetChanged(RowSetEvent event) {
-                    System.out.println("El rowset ha cambiado");
-                    System.out.println(event.toString());
-                    System.out.println(event.getSource().toString());
+                    out.println("El rowset ha cambiado");
+                    out.println(event.toString());
+                    out.println(event.getSource().toString());
                 }
-                
+
                 @Override
                 public void rowChanged(RowSetEvent event) {
-                    System.out.println("Una fila del rowset ha cambiado");
-                    System.out.println(event.toString());
+                    out.println("Una fila del rowset ha cambiado");
+                    out.println(event.toString());
                 }
-                
+
                 @Override
                 public void cursorMoved(RowSetEvent event) {
-                    System.out.println("Nos hemos desplazado por el RowSet");
-                    System.out.println(event.toString());
+                    out.println("Nos hemos desplazado por el RowSet");
+                    out.println(event.toString());
                 }
             });
             rowSet.setCommand("select customer_id, name from customer order by name");
             rowSet.execute();
             while (rowSet.next()) {
-                System.out.format("Id = %d. Nombre = %s%n", rowSet.getInt("customer_id"), rowSet.getString("name"));
+                out.format("Id = %d. Nombre = %s%n", rowSet.getInt("customer_id"), rowSet.getString("name"));
             }
         }
     }
 
     private void usoWebRowSet() throws SQLException, IOException {
+        System.out.println("................EN usoWebRowSet");
+        usarConexion();
         try (WebRowSet rowSet = new WebRowSetImpl()) {
             rowSet.setCommand("select customer_id, name from customer order by name");
             rowSet.execute(con);
             try (FileWriter xmlSalida = new FileWriter("rowset.xml")) {
-                System.out.println("Escribiendo los datos en el archivo \"rowset.xml\"...");
+                out.println("Escribiendo los datos en el archivo \"rowset.xml\"...");
                 rowSet.writeXml(xmlSalida);
-                System.out.println("Datos escritos");
+                out.println("Datos escritos");
             }
             WebRowSet nuevo = new WebRowSetImpl();
             try (FileReader entradaXml = new FileReader("rowset.xml")) {
-                System.out.println("Recuperando los datos del archivo \"rowset.xml\"...");
+                out.println("Recuperando los datos del archivo \"rowset.xml\"...");
                 nuevo.readXml(entradaXml);
-                System.out.println("Datos recuperados");
+                out.println("Datos recuperados");
             }
-            System.out.println("Mostrando los datos...");
+            out.println("Mostrando los datos...");
             nuevo.beforeFirst();
             while (nuevo.next()) {
-                System.out.format("Id = %d. Nombre = %s%n", nuevo.getInt("customer_id"), nuevo.getString("name"));
+                out.format("Id = %d. Nombre = %s%n", nuevo.getInt("customer_id"), nuevo.getString("name"));
             }
         }
     }

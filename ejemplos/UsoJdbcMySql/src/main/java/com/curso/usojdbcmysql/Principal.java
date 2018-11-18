@@ -31,8 +31,7 @@ public class Principal {
             + "id int(10) unsigned NOT NULL auto_increment,"
             + "nombre varchar(255) NOT NULL,"
             + "PRIMARY KEY  (id)" + ") ENGINE=InnoDB DEFAULT CHARSET=utf8;";
-//    private static final String DB = "jdbc:mysql://localhost/test?user=root&password=root";
-    private static final String DB = "jdbc:mysql://localhost/test?user=root";
+    private static final String DB = "jdbc:mysql://localhost/test?user=root&password=root";
     private static final String DRIVER = "com.mysql.jdbc.Driver";
     private Connection con = null;
 

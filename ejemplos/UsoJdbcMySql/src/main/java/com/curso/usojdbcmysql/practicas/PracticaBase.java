@@ -20,13 +20,12 @@ import java.sql.Statement;
  */
 public abstract class PracticaBase {
 
-    private static final String tablaContactosDef = "CREATE TABLE contactos (" + "id int(10) unsigned NOT NULL auto_increment," + "nombre varchar(255) NOT NULL," + "  apellidos varchar(255) NOT NULL," + "PRIMARY KEY  (id)" + ") ENGINE=InnoDB DEFAULT CHARSET=utf8;";
+    private static final String TABLACONTACTOS = "CREATE TABLE contactos (" + "id int(10) unsigned NOT NULL auto_increment," + "nombre varchar(255) NOT NULL," + "  apellidos varchar(255) NOT NULL," + "PRIMARY KEY  (id)" + ") ENGINE=InnoDB DEFAULT CHARSET=utf8;";
     protected Connection con = null;
-    private static final String driverJdbc = "com.mysql.jdbc.Driver";
-//    private static final String urlJdbc = "jdbc:mysql://localhost/test?user=root&password=root";
-    private static final String urlJdbc = "jdbc:mysql://localhost/test?user=root";
-    private static final int errorDriver = -2;
-    private static final int errorConexion = -1;
+    private static final String DRIVERJDBC = "com.mysql.jdbc.Driver";
+    private static final String URLJDBC = "jdbc:mysql://localhost/test?user=root&password=root";
+    private static final int ERRORDRIVER = -2;
+    private static final int ERRORCONEXION = -1;
 
     public PracticaBase() {
     }
@@ -41,15 +40,15 @@ public abstract class PracticaBase {
     protected abstract void accionEspecifica() throws SQLException;
 
     private void conectar() throws ClassNotFoundException, SQLException {
-        Class.forName(driverJdbc);
-        con = DriverManager.getConnection(urlJdbc);
+        Class.forName(DRIVERJDBC);
+        con = DriverManager.getConnection(URLJDBC);
         System.out.println("Conexión establecida con la base de datos");
     }
 
     private void crearTablaContactos() throws SQLException {
         Statement st = con.createStatement();
         st.executeUpdate("DROP TABLE IF EXISTS contactos");
-        st.executeUpdate(tablaContactosDef);
+        st.executeUpdate(TABLACONTACTOS);
     }
 
     private void desconectar() throws SQLException {
@@ -68,8 +67,8 @@ public abstract class PracticaBase {
     }
 
     protected void seleccion() throws SQLException {
-        Statement st = null;
-        ResultSet rs = null;
+        Statement st;
+        ResultSet rs;
         st = con.createStatement();
         final String ordenSQL = "SELECT * FROM CONTACTOS";
         System.out.println("Realizando consulta...");
@@ -78,8 +77,6 @@ public abstract class PracticaBase {
         if (rs != null) {
             rs.close();
         }
-        if (st != null) {
-            st.close();
-        }
+        st.close();
     }
 }

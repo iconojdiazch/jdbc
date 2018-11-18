@@ -104,7 +104,7 @@ public class Principal {
         LOG.info("Usando MySql");
         try {
             Class.forName(DRIVER).newInstance();
-            conexion = DriverManager.getConnection(DB, "root", "");
+            conexion = DriverManager.getConnection(DB, "root", "root");
             LOG.info("Conexión establecida con la base de datos");
         } catch (InstantiationException | IllegalAccessException | ClassNotFoundException | SQLException ex) {
             LOG.log(Level.SEVERE, null, ex);

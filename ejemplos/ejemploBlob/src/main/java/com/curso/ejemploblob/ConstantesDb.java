@@ -14,5 +14,5 @@ public interface ConstantesDb {
     String DB = "jdbc:mysql://localhost/test";
     String DRIVER = "com.mysql.jdbc.Driver";
     String USUARIO = "root";
-    String CLAVE = "";
+    String CLAVE = "root";
 }
