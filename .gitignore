@@ -27,3 +27,6 @@ hs_err_pid*
 /ejemploBlob/target/
 /UsoJdbcMySql/target/
 /UsoRowSet/target/
+/ejemplos/aproximacionFuncional/target/
+/ejemplos/aproximacionReactiva/target/
+/ejemplos/ejemploBlob/target/

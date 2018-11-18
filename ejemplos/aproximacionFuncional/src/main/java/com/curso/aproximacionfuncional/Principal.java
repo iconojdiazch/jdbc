@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.curso.ejemplodostablas;
+package com.curso.aproximacionfuncional;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -86,7 +86,7 @@ public class Principal {
         return resultado;
     }
 
-    private void crearConexion(String cual) {
+    private Connection crearConexion(String cual) {
         switch (cual.toLowerCase()) {
             case "mysql":
                 abrirConexionMySql();
@@ -97,6 +97,7 @@ public class Principal {
             default:
                 throw new IllegalArgumentException("Basa de datos desconocida");
         }
+        return conexion;
     }
 
     private void abrirConexionMySql() {

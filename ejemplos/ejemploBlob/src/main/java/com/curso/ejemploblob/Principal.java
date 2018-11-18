@@ -84,8 +84,7 @@ public class Principal implements ConstantesDb {
     }
 
     private static void prepararBd() {
-        final String orden = "delete from personasfoto";
-        Principal p = new Principal();
+        final String orden = "delete from personasfoto";        
         try (Connection c = DS.getConnection()) {
             c.createStatement().executeUpdate(orden);
             LOG.info("Datos existentes en la tabla 'personasfoto' eliminados");
